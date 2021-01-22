@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong!</title>
+    <style>
+        #screen{
+            background: black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="screen" width="700" height="400"></canvas>
+    <script>
+        const screen = document.getElementById('screen')
+        const context = screen.getContext('2d')
+
+        function createGame(){
+            const state = {
+                bars: {
+                    'left':{
+                        x: 5,
+                        y: 170,
+                        w: 8,
+                        h: 60,
+                        id: 1,
+                        score: 0
+                    },
+                    'right':{
+                        x: 687,
+                        y: 170,
+                        w: 8,
+                        h: 60,
+                        id: 2,
+                        score: 0
+                    }
+                },
+                balls: {
+                    'ball':{
+                        x: 345,
+                        y: 195,
+                        w: 10,
+                        h: 10,
+                        dx: -1,
+                        dy: 1,
+                        mod: 0,
+                        v: 0
+                    }
+                }
+            }
+
+            function moveBar(command){
+                console.log(`>> (${command.currentUserId}) pressed ${command.keyPressed}.`)
+
+                const acceptedMoves = {
+                    ArrowUp(bar) {
+                        if(bar.y > 5){
+                            bar.y -= 5
+                            console.log(`>> Moving Up.`)
+                            return
+                        }
+                        
+                    },
+                    ArrowDown(bar) {
+                        if(bar.y < 335){
+                            bar.y += 5
+                            console.log(`>> Moving Down. ${bar.y}`)
+                            return
+                        }
+                    }
+                }
+
+                const currentUserId = command.currentUserId
+                const keyPressed = command.keyPressed                
+                const moveFunction = acceptedMoves[keyPressed]
+
+                if(moveFunction && state.bars['left'].id == currentUserId){
+                    const bar = state.bars['left']
+                    moveFunction(bar)
+                }else if(moveFunction && state.bars['right'].id == currentUserId){
+                    const bar = state.bars['right']
+                    moveFunction(bar)
+                }
+            }
+
+            function moveBall(){
+                const left = state.bars['left']
+                const right = state.bars['right']
+                const ball = state.balls['ball']
+                if(ball.v == 0){
+                    ball.v = 0
+                }
+                
+                if(left.x + left.w >= ball.x){
+                    if(ball.y + ball.h >= left.y && ball.y <= left.y + left.h){
+                        ball.dx = 1
+                        ball.mod += 0.2
+                    }
+                    else{
+                        newRound('right')
+                    }
+                }else if(ball.x + ball.w >= right.x){
+                    if(ball.y + ball.h >= right.y && ball.y <= right.y + right.h){
+                        ball.dx = -1
+                        ball.mod += 0.2
+                    }
+                    else{
+                        newRound('left')
+                    }
+                }
+
+                if(ball.y <= 0){
+                    ball.dy = 1
+                }else if(ball.y + ball.h >= 400){
+                    ball.dy = -1
+                }
+
+                ball.x += (ball.v + ball.mod) * ball.dx
+                ball.y += (ball.v + ball.mod) * ball.dy
+                
+            }
+
+            function newRound(win){
+                const ball = state.balls['ball']
+                const left = state.bars['left']
+                const right = state.bars['right']
+                if(win == 'left'){
+                    left.score +=1
+                }else{
+                    right.score +=1
+                }
+
+                ball.v = 1
+                ball.x = 345
+                ball.y = 195
+                ball.mod = 0
+                ball.dx *= -1
+            }
+
+            return {
+                moveBar,
+                moveBall,
+                newRound,
+                state
+            }
+        }
+
+        const game = createGame()
+        const keyboardListener = createKeyboardListener()
+        keyboardListener.subscribe(game.moveBar)
+        
+        function createKeyboardListener(){
+            const state = {
+                observers: []
+            }
+
+            function subscribe(observerFunction){
+                state.observers.push(observerFunction)
+            }
+
+            function notifyAll(command){
+                console.log(`>> Notifying ${state.observers.length} observers.`)
+                for(const observerFunction of state.observers){
+                    observerFunction(command)
+                }
+            }
+
+
+            document.addEventListener('keydown', handleKeydown)
+            function handleKeydown(event){
+                const keyPressed = event.key
+                const command = {
+                    currentUserId : 2,
+                    keyPressed
+                }
+                notifyAll(command)      
+            }
+            return {
+                subscribe
+            }    
+        }
+        
+        renderScreen()
+        function renderScreen(){
+            game.moveBall()
+            context.clearRect(0,0,700,400)
+        
+            const left = game.state.bars['left']
+            context.fillStyle = 'white'
+            context.fillRect(left.x,left.y,left.w,left.h)
+        
+            const right = game.state.bars['right']
+            context.fillStyle = 'white'
+            context.fillRect(right.x,right.y,right.w,right.h)
+                    
+            const ball = game.state.balls['ball']
+            context.fillStyle = 'white'
+            context.fillRect(ball.x,ball.y,ball.w,ball.h)
+
+            context.font = '50px Arial'
+            context.fillText(left.score, 50, 50)
+            context.fillText(right.score, 620, 50)
+        
+            requestAnimationFrame(renderScreen)
+        }
+    </script>
+</body>
+</html>
