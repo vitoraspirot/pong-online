@@ -7,13 +7,28 @@ import {Server} from 'socket.io'
 const app = express()
 const server = http.createServer(app)
 const sockets = new Server(server)
+const game = createGame()
+
 
 app.use(express.static('public'))
 
 sockets.on('connection', (socket) => {
     const userId = socket.id
-    console.log(`>> User connected on Server with id: ${userId}`)
+    console.log(`>> User connected on Server with id: ${userId}.`)
+
+    game.addUser(userId)
+    console.log(`>> Users-list (Server): ${game.state.users}`)
+
+    socket.emit('setup', game.state)
+
+    socket.on('disconnect', () => {
+        game.removeUser(userId)
+        console.log(`>> User disconnected: ${userId}`)
+        console.log(`>> Users-list (Server): ${game.state.users}`)
+    })
 })
+
+
 
 server.listen(3000, () => {
     console.log(`>> Server listening on port: 3000.`)

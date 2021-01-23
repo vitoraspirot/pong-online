@@ -71,7 +71,11 @@
 
         socket.on('connect', () => {
             const userId = socket.id
-            console.log(`>> User connected on Client with id: ${userId}`)
+            console.log(`>> User connected on Client with id: ${userId}.`)
+        })
+
+        socket.on('setup', (state) => {
+            game.setState(state)
         })
         
     </script>

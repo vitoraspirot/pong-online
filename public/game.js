@@ -30,7 +30,23 @@ export default function createGame(){
                 mod: 0,
                 v: 0
             }
-        }
+        },
+        users: []
+    }
+
+    function addUser(userId){
+        state.users.push(userId)
+        console.log(`>> Users-list (Client): ${state.users}`)
+    }
+
+    function removeUser(userId){
+        let index = state.users.indexOf(userId)
+        state.users.splice( index, 1)
+        console.log(`>> Users-list (Client): ${state.users}`)
+    }
+
+    function setState(newState){
+        Object.assign(state, newState)
     }
 
     function moveBar(command){
@@ -120,6 +136,9 @@ export default function createGame(){
 
     return {
         state,
+        addUser,
+        removeUser,
+        setState,
         moveBar,
         moveBall,
         newRound     
