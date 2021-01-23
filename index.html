@@ -88,10 +88,7 @@
                 const left = state.bars['left']
                 const right = state.bars['right']
                 const ball = state.balls['ball']
-                if(ball.v == 0){
-                    ball.v = 0
-                }
-                
+                                
                 if(left.x + left.w >= ball.x){
                     if(ball.y + ball.h >= left.y && ball.y <= left.y + left.h){
                         ball.dx = 1
