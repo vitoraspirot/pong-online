@@ -1,16 +1,5 @@
 export default function createGame(){
-    const play = document.getElementById('play')
-        play.addEventListener('click', start)
-        function start(){
-            game.state.balls['ball'].v = 1        
-        }
-        
-        const stop = document.getElementById('pause')
-        stop.addEventListener('click', pause)
-        function pause(){
-            game.state.balls['ball'].v = 0        
-        }
-    
+      
     const state = {
         bars: {
             'left':{

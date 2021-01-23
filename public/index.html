@@ -36,6 +36,7 @@
         }
         
     </style>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     <canvas id="screen" width="700" height="400"></canvas>
@@ -65,6 +66,13 @@
         
         const screen = document.getElementById('screen')
         renderScreen(screen, game, requestAnimationFrame)
+
+        const socket = io()
+
+        socket.on('connect', () => {
+            const userId = socket.id
+            console.log(`>> User connected on Client with id: ${userId}`)
+        })
         
     </script>
 </body>
