@@ -1,4 +1,4 @@
-export default function renderScreen(screen, game, requestAnimationFrame, userId){
+export default function renderScreen(screen, game, requestAnimationFrame){
 
     const context = screen.getContext('2d')
 
@@ -21,7 +21,7 @@ export default function renderScreen(screen, game, requestAnimationFrame, userId
     context.fillText(left.score, 50, 50)
     context.fillText(right.score, 620, 50)
 
-    requestAnimationFrame(() => {
-        renderScreen(screen, game, requestAnimationFrame, userId)
+        requestAnimationFrame(() => {
+        renderScreen(screen, game, requestAnimationFrame)
     })
 }

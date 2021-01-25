@@ -63,15 +63,15 @@
         
 
         const game = createGame()
-        const keyboardListener = createKeyboardListener(document)   
+        const keyboardListener = createKeyboardListener(document)  
 
         const socket = io()
 
         socket.on('connect', () => {
             const userId = socket.id
             console.log(`>> User connected on Client with id: ${userId}.`)
-            const screen = document.getElementById('screen')
-            renderScreen(screen, game, requestAnimationFrame, userId)
+            const screen = document.getElementById('screen') 
+            renderScreen(screen, game, requestAnimationFrame)
            
         })
 
@@ -96,16 +96,30 @@
             game.removeUser(command)
         })
 
-        socket.on('move-bar', (command) => {
-            if(socket.id !== command.userId){
-                game.moveBar(command)
-            }
-        })
+        socket.on('re-sync', (newState) => {
+            console.log(`>> (CLIENT) left (${game.state.bars['left'].y}) || right(${game.state.bars['right'].y})`)
+            console.log(`>> (SERVER) left (${newState.bars['left'].y}) || right(${newState.bars['right'].y})`)
 
-        socket.on('reset-state', (state) => {
-            game.update()
-            game.setState(state)
-            
+            if(game.state.bars['right'].y !== newState.bars['right'].y){
+                console.log('DIFERENTE')
+                game.setState(newState)
+            }else{
+                console.log('IGUAL')
+            }
+
+        })  
+        
+        socket.on('move-bar', (command) => {
+            const userId = socket.id
+            const moveId = command.userId
+
+            if(userId !== moveId){
+                game.moveBar(command)
+                console.log(`>> left (${game.state.bars['left'].y}) || right(${game.state.bars['right'].y})`)
+            }
+
+            console.log(`USERS (${game.state.users})`)
+
         })
         
     </script>

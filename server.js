@@ -13,7 +13,7 @@ app.use(express.static('public'))
 const game = createGame()
 
 game.subscribe((command) => {
-    console.log(`>> Emiting ${command.type}`)
+    //console.log(`>> Emiting ${command.type}`)
     sockets.emit(command.type, command)
 })
 
@@ -28,10 +28,13 @@ sockets.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log(`>> User disconnected: ${userId}`)     
         game.removeUser(userId)
+        socket.emit('setup', game.state)
     })
 
     socket.on('move-bar', (command) => {
+        socket.emit('re-sync', game.state)
         game.moveBar(command)
+        //console.log(`>> (SERVER) left (${game.state.bars['left'].y}) || right(${game.state.bars['right'].y})`)
     })
 })
 

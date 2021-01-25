@@ -82,14 +82,14 @@ export default function createGame(){
         const acceptedMoves = {
             ArrowUp(bar) {
                 if(bar.y > 5){
-                    bar.y -= 5
+                    bar.y -= 1
                     return
                 }
                 
             },
             ArrowDown(bar) {
                 if(bar.y < 335){
-                    bar.y += 5
+                    bar.y += 1
                     return
                 }
             }
@@ -102,11 +102,12 @@ export default function createGame(){
         if(moveFunction && state.bars['left'].id === userId){
             const bar = state.bars['left']
             moveFunction(bar)
-        }
-        if(moveFunction && state.bars['right'].id === userId){
+        }else{
+            if(moveFunction && state.bars['right'].id === userId){
             const bar = state.bars['right']
             moveFunction(bar)
-        }
+        }}
+        
     }
 
     function moveBall(){
