@@ -78,7 +78,6 @@ export default function createGame(){
 
     function moveBar(command){
         notifyAll(command)
-        console.log(`>> (${command.currentUserId}) pressed ${command.keyPressed}.`)
 
         const acceptedMoves = {
             ArrowUp(bar) {
@@ -96,14 +95,15 @@ export default function createGame(){
             }
         }
 
-        const currentUserId = command.currentUserId
+        const userId = command.userId
         const keyPressed = command.keyPressed                
         const moveFunction = acceptedMoves[keyPressed]
 
-        if(moveFunction && state.bars['left'].id == currentUserId){
+        if(moveFunction && state.bars['left'].id === userId){
             const bar = state.bars['left']
             moveFunction(bar)
-        }else if(moveFunction && state.bars['right'].id == currentUserId){
+        }
+        if(moveFunction && state.bars['right'].id === userId){
             const bar = state.bars['right']
             moveFunction(bar)
         }

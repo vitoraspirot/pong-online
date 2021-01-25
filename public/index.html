@@ -60,6 +60,8 @@
             game.state.balls['ball'].v = 0        
         }
 
+        
+
         const game = createGame()
         const keyboardListener = createKeyboardListener(document)   
 
@@ -68,9 +70,9 @@
         socket.on('connect', () => {
             const userId = socket.id
             console.log(`>> User connected on Client with id: ${userId}.`)
-
             const screen = document.getElementById('screen')
             renderScreen(screen, game, requestAnimationFrame, userId)
+           
         })
 
         socket.on('setup', (state) => {
@@ -95,8 +97,6 @@
         })
 
         socket.on('move-bar', (command) => {
-            console.log(`>> Receiving ${command.type} -> ${command.userId}`)
-
             if(socket.id !== command.userId){
                 game.moveBar(command)
             }
@@ -104,8 +104,8 @@
 
         socket.on('reset-state', (state) => {
             game.update()
-            game.bars['left'].y = 170
-            game.bars['right'].y = 170 
+            game.setState(state)
+            
         })
         
     </script>

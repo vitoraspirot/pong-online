@@ -21,9 +21,10 @@ export default function createKeyboardListener(document){
     document.addEventListener('keydown', handleKeydown)
     function handleKeydown(event){
         const keyPressed = event.key
+        console.log(`(${state.userId}) pressionou o botao (${keyPressed})`)
         const command = {
             type: 'move-bar',
-            currentUserId : state.userId,
+            userId : state.userId,
             keyPressed
         }
         notifyAll(command)      

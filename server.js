@@ -26,19 +26,11 @@ sockets.on('connection', (socket) => {
     socket.emit('setup', game.state)
 
     socket.on('disconnect', () => {
-        console.log(`>> User disconnected: ${userId}`)
-
-        if(userId === game.state.users[0] || userId === game.state.users[1]){
-            socket.emit('reset-state', game.state)
-        }
+        console.log(`>> User disconnected: ${userId}`)     
         game.removeUser(userId)
-
-
     })
 
     socket.on('move-bar', (command) => {
-        command.userId = userId
-        command.type = 'move-bar'
         game.moveBar(command)
     })
 })
