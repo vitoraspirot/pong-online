@@ -1,4 +1,4 @@
-export default function renderScreen(screen, game, requestAnimationFrame){
+export default function renderScreen(screen, game, requestAnimationFrame, userId){
 
     const context = screen.getContext('2d')
 
@@ -21,7 +21,17 @@ export default function renderScreen(screen, game, requestAnimationFrame){
     context.fillText(left.score, 50, 50)
     context.fillText(right.score, 620, 50)
 
+    if(userId === game.state.bars['left'].id){
+        const userBar = game.state.bars['left']
+        context.fillStyle = 'yellow'
+        context.fillRect(userBar.x,userBar.y,userBar.w,userBar.h)
+    }else if(userId === game.state.bars['right'].id){
+        const userBar = game.state.bars['right']
+        context.fillStyle = 'yellow'
+        context.fillRect(userBar.x,userBar.y,userBar.w,userBar.h)
+    }
+
         requestAnimationFrame(() => {
-        renderScreen(screen, game, requestAnimationFrame)
+        renderScreen(screen, game, requestAnimationFrame, userId)
     })
 }
