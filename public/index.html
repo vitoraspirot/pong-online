@@ -61,21 +61,51 @@
         }
 
         const game = createGame()
-        const keyboardListener = createKeyboardListener(document)
-        keyboardListener.subscribe(game.moveBar)      
-        
-        const screen = document.getElementById('screen')
-        renderScreen(screen, game, requestAnimationFrame)
+        const keyboardListener = createKeyboardListener(document)   
 
         const socket = io()
 
         socket.on('connect', () => {
             const userId = socket.id
             console.log(`>> User connected on Client with id: ${userId}.`)
+
+            const screen = document.getElementById('screen')
+            renderScreen(screen, game, requestAnimationFrame, userId)
         })
 
         socket.on('setup', (state) => {
+            const userId = socket.id
             game.setState(state)
+
+            keyboardListener.registerUserId(userId)
+            keyboardListener.subscribe(game.moveBar)   
+            keyboardListener.subscribe((command => {
+                socket.emit('move-bar', command)
+            }))   
+        })
+
+        socket.on('add-user', (command) => {
+            console.log(`>> Receiving ${command.type} -> ${command.userId}`)
+            game.addUser(command)
+        })
+
+        socket.on('remove-user', (command) => {
+            console.log(`>> Receiving ${command.type} -> ${command.userId}`)
+            game.removeUser(command)
+        })
+
+        socket.on('move-bar', (command) => {
+            console.log(`>> Receiving ${command.type} -> ${command.userId}`)
+
+            if(socket.id !== command.userId){
+                game.moveBar(command)
+            }
+        })
+
+        socket.on('reset-state', (state) => {
+            game.update()
+            game.bars['left'].y = 170
+            game.bars['right'].y = 170 
         })
         
     </script>

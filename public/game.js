@@ -7,7 +7,7 @@ export default function createGame(){
                 y: 170,
                 w: 8,
                 h: 60,
-                id: 1,
+                id: 0,
                 score: 0
             },
             'right':{
@@ -15,7 +15,7 @@ export default function createGame(){
                 y: 170,
                 w: 8,
                 h: 60,
-                id: 2,
+                id: 0,
                 score: 0
             }
         },
@@ -33,16 +33,43 @@ export default function createGame(){
         },
         users: []
     }
+ 
+    const observers = []
+
+    function subscribe(observerFunction){
+        observers.push(observerFunction)
+    }
+
+    function notifyAll(command){
+        for(const observerFunction of observers){
+            observerFunction(command)
+        }
+    }
 
     function addUser(userId){
         state.users.push(userId)
-        console.log(`>> Users-list (Client): ${state.users}`)
+        update()
+         
+        notifyAll({
+            type: 'add-user',
+            userId: userId
+        })
     }
 
     function removeUser(userId){
         let index = state.users.indexOf(userId)
         state.users.splice( index, 1)
-        console.log(`>> Users-list (Client): ${state.users}`)
+        update()
+
+        notifyAll({
+            type: 'remove-user',
+            userId: userId
+        })
+    }
+
+    function update(){
+        state.bars['left'].id = state.users[0]
+        state.bars['right'].id = state.users[1]
     }
 
     function setState(newState){
@@ -50,13 +77,13 @@ export default function createGame(){
     }
 
     function moveBar(command){
+        notifyAll(command)
         console.log(`>> (${command.currentUserId}) pressed ${command.keyPressed}.`)
 
         const acceptedMoves = {
             ArrowUp(bar) {
                 if(bar.y > 5){
                     bar.y -= 5
-                    console.log(`>> Moving Up.`)
                     return
                 }
                 
@@ -64,7 +91,6 @@ export default function createGame(){
             ArrowDown(bar) {
                 if(bar.y < 335){
                     bar.y += 5
-                    console.log(`>> Moving Down. ${bar.y}`)
                     return
                 }
             }
@@ -138,9 +164,11 @@ export default function createGame(){
         state,
         addUser,
         removeUser,
+        update,
         setState,
         moveBar,
         moveBall,
-        newRound     
+        newRound,
+        subscribe     
     }
 }

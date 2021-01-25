@@ -1,6 +1,11 @@
 export default function createKeyboardListener(document){
     const state = {
-        observers: []
+        observers: [],
+        userId: null
+    }
+
+    function registerUserId(userId){
+        state.userId = userId
     }
 
     function subscribe(observerFunction){
@@ -17,12 +22,14 @@ export default function createKeyboardListener(document){
     function handleKeydown(event){
         const keyPressed = event.key
         const command = {
-            currentUserId : 2,
+            type: 'move-bar',
+            currentUserId : state.userId,
             keyPressed
         }
         notifyAll(command)      
     }
     return {
-        subscribe
+        subscribe,
+        registerUserId
     }    
 }
