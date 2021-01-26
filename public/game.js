@@ -37,7 +37,7 @@ export default function createGame(){
     const observers = []
 
     function start(){
-        const f = 100
+        const f = 10
         setInterval(moveBall, f)
     }
 
