@@ -50,8 +50,11 @@
 
         const play = document.getElementById('play')
         play.addEventListener('click', start)
+
         function start(){
-            game.state.balls['ball'].v = 1        
+            game.state.balls['ball'].v = 10  
+            const v = game.state.balls['ball'].v
+            socket.emit('start', v)      
         }
         
         const stop = document.getElementById('pause')
@@ -119,7 +122,12 @@
             }
 
             console.log(`USERS (${game.state.users})`)
+        })
 
+        socket.on('move-ball', (command) => {
+            console.log(`Receiving ${command.type}`)
+            game.setState(command.newState)
+            //game.moveBall()
         })
         
     </script>

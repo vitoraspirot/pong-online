@@ -13,7 +13,7 @@ app.use(express.static('public'))
 const game = createGame()
 
 game.subscribe((command) => {
-    //console.log(`>> Emiting ${command.type}`)
+    console.log(`>> Emiting ${command.type}`)
     sockets.emit(command.type, command)
 })
 
@@ -34,7 +34,12 @@ sockets.on('connection', (socket) => {
     socket.on('move-bar', (command) => {
         socket.emit('re-sync', game.state)
         game.moveBar(command)
-        //console.log(`>> (SERVER) left (${game.state.bars['left'].y}) || right(${game.state.bars['right'].y})`)
+    })
+
+    socket.on('start', (v) => {
+        console.log('START')
+        game.state.balls['ball'].v = v
+        game.start()
     })
 })
 

@@ -1,8 +1,6 @@
 export default function renderScreen(screen, game, requestAnimationFrame, userId){
 
     const context = screen.getContext('2d')
-
-    game.moveBall()
     context.clearRect(0,0,700,400)
 
     const left = game.state.bars['left']
