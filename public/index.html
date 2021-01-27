@@ -52,15 +52,13 @@
         play.addEventListener('click', start)
 
         function start(){
-            game.state.balls['ball'].v = 10  
-            const v = game.state.balls['ball'].v
-            socket.emit('start', v)      
+            socket.emit('start', 2)      
         }
         
         const stop = document.getElementById('pause')
         stop.addEventListener('click', pause)
         function pause(){
-            game.state.balls['ball'].v = 0        
+            socket.emit('stopp', 0)    
         }
 
         
@@ -100,16 +98,9 @@
         })
 
         socket.on('re-sync', (newState) => {
-            console.log(`>> (CLIENT) left (${game.state.bars['left'].y}) || right(${game.state.bars['right'].y})`)
-            console.log(`>> (SERVER) left (${newState.bars['left'].y}) || right(${newState.bars['right'].y})`)
-
             if(game.state.bars['right'].y !== newState.bars['right'].y){
-                console.log('DIFERENTE')
                 game.setState(newState)
-            }else{
-                console.log('IGUAL')
             }
-
         })  
         
         socket.on('move-bar', (command) => {
@@ -118,16 +109,13 @@
 
             if(userId !== moveId){
                 game.moveBar(command)
-                console.log(`>> left (${game.state.bars['left'].y}) || right(${game.state.bars['right'].y})`)
             }
 
-            console.log(`USERS (${game.state.users})`)
         })
 
         socket.on('move-ball', (command) => {
             console.log(`Receiving ${command.type}`)
             game.setState(command.newState)
-            //game.moveBall()
         })
         
     </script>

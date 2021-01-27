@@ -13,7 +13,7 @@ app.use(express.static('public'))
 const game = createGame()
 
 game.subscribe((command) => {
-    console.log(`>> Emiting ${command.type}`)
+    //console.log(`>> Emiting ${command.type}`)
     sockets.emit(command.type, command)
 })
 
@@ -37,9 +37,13 @@ sockets.on('connection', (socket) => {
     })
 
     socket.on('start', (v) => {
-        console.log('START')
         game.state.balls['ball'].v = v
-        game.start()
+        game.updateBall()
+    })
+    
+    socket.on('stopp', (v) => {
+        game.state.balls['ball'].v = v
+        game.stop()
     })
 })
 

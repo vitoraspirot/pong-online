@@ -36,9 +36,15 @@ export default function createGame(){
  
     const observers = []
 
-    function start(){
+    var point
+
+    function updateBall(){
         const f = 10
-        setInterval(moveBall, f)
+        point = setInterval(moveBall, f)
+    }
+
+    function stop(){
+        clearInterval(point)
     }
 
     function subscribe(observerFunction){
@@ -119,8 +125,6 @@ export default function createGame(){
         const left = state.bars['left']
         const right = state.bars['right']
         const ball = state.balls['ball']
-
-        console.log('MOVEBALL')
                         
         if(left.x + left.w >= ball.x){
             if(ball.y + ball.h >= left.y && ball.y <= left.y + left.h){
@@ -166,7 +170,7 @@ export default function createGame(){
             right.score +=1
         }
 
-        ball.v = 1
+        ball.v = 2
         ball.x = 345
         ball.y = 195
         ball.mod = 0
@@ -175,7 +179,8 @@ export default function createGame(){
 
     return {
         state,
-        start,
+        updateBall,
+        stop,
         addUser,
         removeUser,
         update,
