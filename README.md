@@ -5,6 +5,10 @@ Cada jogador controla uma paleta (barra vertical) no jogo movendo-a verticalment
 
 Assim que um usuário acessa o jogo ele vai para uma fila de usuários conectados, onde o primeiro da fila controla a paleta da esquerda e o segundo a da direita (a paleta toma a cor amarela para o jogador que a controla). Todos os outros usuários da fila podem apenas assistir o jogo, onde assim que um dos jogadores for desconectado ou perder o jogo a fila atualiza e os jogadores mudam com base nas posições da fila.
 
+<p align="center">
+  <img src="https://github.com/vitoraspirot/pong-online/blob/main/pong.gif">
+</p>
+
 ## Configuração para Desenvolvimento
 
 O jogo foi desenvolvido no Windows 10, feito com HTML5, CSS6, Javascript, Node.js, Express e Socket.io. Instalações necessárias para o desenvolvimento:
