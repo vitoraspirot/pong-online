@@ -46,7 +46,7 @@ export default function createGame(){
     function stop(){
         clearInterval(point)
     }
-
+i
     function subscribe(observerFunction){
         observers.push(observerFunction)
     }
